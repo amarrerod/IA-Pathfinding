@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -33,12 +34,15 @@ import javax.swing.JFrame;
  * 
  * @author Kevin Glass
  */
-public class Game extends Canvas implements KeyListener {
+public class Game extends Canvas {
 	
     
       private static final String NOMBRE = "Inteligencia Artificial - Pathfinding";
       private static final int ANCHO = 800;
       private static final  int ALTO = 600;
+      
+      private static final int ANCHO_MAPA = 128;
+      private static final int ALTO_MAPA = 68;
       
       private static JFrame ventanaPrincipal;
       
@@ -53,7 +57,7 @@ public class Game extends Canvas implements KeyListener {
 	private boolean down;
 
       
-      private Image spriteAgente;
+     
       private Map map;
       private Agente jugador;
       private BufferStrategy strategy;
@@ -63,37 +67,25 @@ public class Game extends Canvas implements KeyListener {
        
 	public Game() {
 		
-            setPreferredSize(new Dimension(ANCHO,ALTO));
-            
+           
             ventanaPrincipal = new JFrame(NOMBRE);
             ventanaPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            ventanaPrincipal.setLayout(null);
+            ventanaPrincipal.setLayout(new BorderLayout());
+           
+            //setBounds(0,0,ANCHO*15,ALTO*15);
+            ventanaPrincipal.pack();
+            ventanaPrincipal.add(this, BorderLayout.CENTER);
             ventanaPrincipal.setSize(ANCHO,ALTO);
-            setBounds(0,0,ANCHO,ALTO);
-            ventanaPrincipal.add(this);
-            ventanaPrincipal.setResizable(false);
+            ventanaPrincipal.setResizable(true);
             ventanaPrincipal.setLocationRelativeTo(null); //Para que quede centrada en el centro del escritorio
            
-            
-            try{
-                URL url = Thread.currentThread().getContextClassLoader().getResource("res/sprite.gif");
-                
-                if (url == null){
-                    System.err.println("Unable to find sprite: res/sprite.gif");
-                    System.exit(0);
-                }
-                spriteAgente = ImageIO.read(url);
-                
-            }catch(IOException e){
-                System.err.println("No se pudo cargar el sprite del jugador");
-                System.exit(0);
-            }
+                    
          
              ventanaPrincipal.setVisible(true);
              createBufferStrategy(2);
              strategy = getBufferStrategy();
-             map = new Map(ANCHO,ALTO);
-             jugador = new Agente(spriteAgente, map, 1.5f,1.5f);
+             map = new Map(ANCHO_MAPA, ALTO_MAPA);
+             jugador = new Agente(map, 1,1);
              bucleJuego();
 	}
 	
@@ -105,8 +97,9 @@ public class Game extends Canvas implements KeyListener {
         System.nanoTime();
         while (funcionando){ //Mientras el juego esté funcionando
             Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-            
+           
             map.pintarMapa(g);
+            jugador.pintarAgente(g);
             g.dispose();
             strategy.show();
             
@@ -117,89 +110,10 @@ public class Game extends Canvas implements KeyListener {
             long delta = (System.nanoTime() - ultimo) / 1000000;
             ultimo = System.nanoTime();
            
-            for(int i=0; i<delta / 5; i++)
-                logicaJuego(5);
-            
-            if ((delta % 5) != 0)
-                logicaJuego(delta%5);
-         
-            
 	}
     }
            
-        public void logicaJuego(long delta){
-            
-            float dx = 0, dy = 0;
-            
-           if (left) {
-			dx -= 1;
-		}
-		if (right) {
-			dx += 1;
-		}
-		if (up) {
-			dy -= 1;
-		}
-		if (down) {
-			dy += 1;
-		}
-		
-		// if the player needs to move attempt to move the entity
-
-		// based on the keys multiplied by the amount of time thats
-
-		// passed
-
-		if ((dx != 0) || (dy != 0)) {
-			jugador.move(dx * delta * 0.003f,
-						dy * delta * 0.003f);
-		}
-            
-            
-            
-        }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // check the keyboard and record which keys are pressed
-
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			left = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			right = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			down = true;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			up = true;
-		}
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        
-        
-		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			left = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			right = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			down = false;
-		}
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			up = false;
-		}
-    }
- 
+      
     public static void main (String[] args){
         
         new Game();

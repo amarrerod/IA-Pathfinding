@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import tilemaps.claseSprites;
 import java.util.*;
 import java.util.logging.Level;
@@ -21,16 +22,19 @@ import java.util.logging.Logger;
 
 public class Map {
 
-       
-	public static final int TILE_SIZE = 20;
-        public static final int ANCHO_CELDA = 15;
-        public static final int ALTO_CELDA = 15;
+        
+	public static final int TILE_SIZE = 15;
+        
+        public static final int INICIO = -1;
+        public static final int FINAL = 2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
 	private int ancho, alto, x, y;
         
         public int[][] pixelesMapa; //Mapa 
-	
+
+        private int xBeginMapa, yBeginMapa;
+        private int xEndMapa, yEndMapa;
 
 	
 	public Map(final int ancho, final int alto) {
@@ -38,6 +42,8 @@ public class Map {
             this.alto = alto;
             this.ancho = ancho;
             pixelesMapa = new int [ancho][alto];
+            
+          
             generarMapaRandom();
             
 //            for (int y=0;y<alto;y++) {
@@ -63,18 +69,25 @@ public class Map {
 //		pixelesMapa[7][5] = VACIO;
 //		pixelesMapa[7][4] = VACIO;
 //		pixelesMapa[11][7] = VACIO;
-         
+//         
             
 	}
 	
         public void pintarMapa(Graphics2D g){
             
-            for(int x = 0; x < this.ancho; x++){
-                for(int y=0; y < this.alto; y++){
+            
+            for(int x = 0; x < ancho; x++){
+                for(int y=0; y < alto; y++){
                     
-                    g.setColor(Color.darkGray);
+                   g.setColor(Color.gray);
                     if(pixelesMapa[x][y] == BLOQUEADA)
-                        g.setColor(Color.gray);
+                        g.setColor(Color.darkGray);
+                    
+                    if (pixelesMapa[x][y] == INICIO)
+                        g.setColor(Color.YELLOW);
+                    
+                    if (pixelesMapa[x][y] == FINAL)
+                        g.setColor(Color.BLUE);
                     
                    
                 
@@ -93,35 +106,53 @@ public class Map {
             
             for(int y=0; y<alto; y++){
                 for(int x=0; x<ancho; x++){
+                    
+                  if(x == 0 || y == 0 ||
+                       x == ancho-1 || y == alto-1 )
+                        pixelesMapa[x][y] = 1;
+                            
+                    else
                     pixelesMapa[x][y] = new Random().nextInt(2);
                     
                 }
             }
             
         }
-        
+        //Cargamos un mapa desde un fichero
         public void cargarMapa(String ruta) {
         
-            try {
-                DataInputStream ds = new DataInputStream(new FileInputStream(ruta));
-                
-                //Leer filas y columnas --> cargar mapa                 
-                
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
         
         
         }
         
         
-	
-	public boolean blocked(float x, float y) {
-		// look up the right cell (based on simply rounding the floating
-
-		// values) and check the value
-
+        public int[] getInicioMapa(){
+            
+            int[] valores = {xBeginMapa, yBeginMapa};
+            return (valores);
+        }
+        
+        public int[] getFinalMapa(){
+            
+            int[] valores = {xEndMapa, yEndMapa};
+            return (valores);
+            
+        }
+        
+        public void setInicioMapa(int x, int y){
+            
+            xBeginMapa = x;
+            yBeginMapa = y;
+        }
+        
+        public void setFinalMapa(int x, int y){
+            
+            xEndMapa = x;
+            yEndMapa = y;
+        }
+        
+        public boolean celdaBloqueada(float x, float y) {
+		
 		return pixelesMapa[(int) x][(int) y] == BLOQUEADA;
 	}
 }
