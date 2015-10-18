@@ -15,22 +15,23 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import tilemaps.claseSprites;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 public class Map {
 
-        
+       
 	public static final int TILE_SIZE = 15;
-        
         public static final int INICIO = -1;
         public static final int FINAL = 2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
-	private int ancho, alto, x, y;
-        
+	private int ancho, alto, x, y, obsPercentage;
+       
+        private Scanner rutaMapa;
         public int[][] pixelesMapa; //Mapa 
 
         private int xBeginMapa, yBeginMapa;
@@ -39,37 +40,13 @@ public class Map {
 	
 	public Map(final int ancho, final int alto) {
 		
+            rutaMapa = null;
             this.alto = alto;
             this.ancho = ancho;
             pixelesMapa = new int [ancho][alto];
             
-          
-            generarMapaRandom();
-            
-//            for (int y=0;y<alto;y++) {
-//			pixelesMapa[0][y] = BLOQUEADA;
-//			pixelesMapa[2][y] = BLOQUEADA;
-//			pixelesMapa[7][y] = BLOQUEADA;
-//			pixelesMapa[11][y] = BLOQUEADA;
-//			pixelesMapa[ancho-1][y] = BLOQUEADA;
-//		}
-//		for (int x=0;x<ancho;x++) {
-//			if ((x > 0) && (x < ancho-1)) {
-//				pixelesMapa[x][10] = VACIO;
-//			}
-//			
-//			if (x > 2) {
-//				pixelesMapa[x][9] = BLOQUEADA;
-//			}
-//			pixelesMapa[x][0] = BLOQUEADA;
-//			pixelesMapa[x][alto-1] = BLOQUEADA;
-//		}
-//		
-//		pixelesMapa[4][9] = VACIO;
-//		pixelesMapa[7][5] = VACIO;
-//		pixelesMapa[7][4] = VACIO;
-//		pixelesMapa[11][7] = VACIO;
-//         
+           // generarMapaRandom();
+             cargarMapa();       
             
 	}
 	
@@ -104,6 +81,7 @@ public class Map {
         
         public void generarMapaRandom(){
             
+            
             for(int y=0; y<alto; y++){
                 for(int x=0; x<ancho; x++){
                     
@@ -111,7 +89,7 @@ public class Map {
                        x == ancho-1 || y == alto-1 )
                         pixelesMapa[x][y] = 1;
                             
-                    else
+                  else 
                     pixelesMapa[x][y] = new Random().nextInt(2);
                     
                 }
@@ -119,11 +97,20 @@ public class Map {
             
         }
         //Cargamos un mapa desde un fichero
-        public void cargarMapa(String ruta) {
+        public void cargarMapa(){
         
+            try{
+            rutaMapa = new Scanner(new File("src\\mapas\\mapa1.txt")); //Poner la ruta del fichero
+            }catch(FileNotFoundException e){
+                System.out.println("Fichero no encontrado \n");
+            }
+             
+            for(int x=0; x<ancho; x++)
+                for(int y=0; y<alto; y++)
+                   pixelesMapa[x][y] = rutaMapa.nextInt();
+    }
+
         
-        
-        }
         
         
         public int[] getInicioMapa(){
@@ -155,4 +142,14 @@ public class Map {
 		
 		return pixelesMapa[(int) x][(int) y] == BLOQUEADA;
 	}
+        
+        public void setObsPercentage(final int percentage){
+            
+                this.obsPercentage = percentage;
+        }
+        
+        public int getObsPercentage(){
+                
+                return this.obsPercentage;
+        }
 }

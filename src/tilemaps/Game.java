@@ -34,15 +34,15 @@ import javax.swing.JFrame;
  * 
  * @author Kevin Glass
  */
-public class Game extends Canvas {
+public class Game extends Canvas implements KeyListener {
 	
     
       private static final String NOMBRE = "Inteligencia Artificial - Pathfinding";
       private static final int ANCHO = 800;
       private static final  int ALTO = 600;
       
-      private static final int ANCHO_MAPA = 128;
-      private static final int ALTO_MAPA = 68;
+      private static final int ANCHO_MAPA = 30;//128;
+      private static final int ALTO_MAPA = 30;//68;
       
       private static JFrame ventanaPrincipal;
       
@@ -77,14 +77,18 @@ public class Game extends Canvas {
             ventanaPrincipal.add(this, BorderLayout.CENTER);
             ventanaPrincipal.setSize(ANCHO,ALTO);
             ventanaPrincipal.setResizable(true);
-            ventanaPrincipal.setLocationRelativeTo(null); //Para que quede centrada en el centro del escritorio
-           
-                    
-         
-             ventanaPrincipal.setVisible(true);
+            ventanaPrincipal.setLocationRelativeTo(null); //Para que quede centrada en el centro del escritorio       
+            
+             
+            
+            ventanaPrincipal.addKeyListener(this);
+            addKeyListener(this);
+            ventanaPrincipal.setVisible(true); 
+             
              createBufferStrategy(2);
              strategy = getBufferStrategy();
              map = new Map(ANCHO_MAPA, ALTO_MAPA);
+             map.setObsPercentage(50);
              jugador = new Agente(map, 1,1);
              bucleJuego();
 	}
@@ -109,14 +113,84 @@ public class Game extends Canvas {
             
             long delta = (System.nanoTime() - ultimo) / 1000000;
             ultimo = System.nanoTime();
-           
-	}
+            
+            for(int i=0; i<delta / 5; i++)
+                logic(5);
+	
+            if ((delta % 5) != 0)
+                logic(delta % 5);
+        
+        
+        }
     }
-           
+        
+    public void logic(long delta){
+        
+        float dx = 0;
+		float dy = 0;
+		if (left) {
+			dx -= 1;
+		}
+		if (right) {
+			dx += 1;
+		}
+		if (up) {
+			dy -= 1;
+		}
+		if (down) {
+			dy += 1;
+		}
+		
+		
+		if ((dx != 0) || (dy != 0)) {
+			jugador.moverJugador(dx * delta * 0.003f,
+						dy * delta * 0.003f);
+		}
+        
+    }
       
     public static void main (String[] args){
         
         new Game();
+        
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			left = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			right = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			down = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			up = true;
+		}
+        
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			left = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			right = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			down = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			up = false;
+		}
     }
     
     
