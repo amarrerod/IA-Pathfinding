@@ -105,8 +105,8 @@ public class Map {
                 System.out.println("Fichero no encontrado \n");
             }
              
-            for(int x=0; x<ancho; x++)
-                for(int y=0; y<alto; y++)
+            for(int x=0; x<alto; x++)
+                for(int y=0; y<ancho; y++)
                    pixelesMapa[x][y] = rutaMapa.nextInt();
     }
 
