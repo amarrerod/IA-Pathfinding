@@ -29,7 +29,7 @@ public class Map {
         public static final int FINAL = 2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
-	private int ancho, alto, x, y, obsPercentage;
+	private int ancho, alto, x, y, obstPercentage;
        
         private Scanner rutaMapa;
         public int[][] pixelesMapa; //Mapa 
@@ -45,8 +45,8 @@ public class Map {
             this.ancho = ancho;
             pixelesMapa = new int [ancho][alto];
             
-           // generarMapaRandom();
-             cargarMapa();       
+            generarMapaRandom();
+            // cargarMapa();       
             
 	}
 	
@@ -81,7 +81,7 @@ public class Map {
         
         public void generarMapaRandom(){
             
-            
+            int count = 0;
             for(int y=0; y<alto; y++){
                 for(int x=0; x<ancho; x++){
                     
@@ -89,9 +89,16 @@ public class Map {
                        x == ancho-1 || y == alto-1 )
                         pixelesMapa[x][y] = 1;
                             
-                  else 
-                    pixelesMapa[x][y] = new Random().nextInt(2);
-                    
+                  else {
+                   
+                      int i;
+                      if (( ((i = new Random().nextInt(2)) == 1) && (count == obstPercentage)))
+                                pixelesMapa[x][y] = 0;
+                      else{
+                            pixelesMapa[x][y] = i;
+                            count ++;
+                        }
+                      } 
                 }
             }
             
@@ -143,13 +150,22 @@ public class Map {
 		return pixelesMapa[(int) x][(int) y] == BLOQUEADA;
 	}
         
-        public void setObsPercentage(final int percentage){
+        public void setObstPercentage(final int percentage){
             
-                this.obsPercentage = percentage;
+                this.obstPercentage = percentage;
         }
         
-        public int getObsPercentage(){
+        public int getObstPercentage(){
                 
-                return this.obsPercentage;
+                return this.obstPercentage;
+        }
+        
+        
+        public void resetMapa(){
+            
+            pixelesMapa = null; //Resetamos el array
+            ancho = 0;
+            alto = 0;
+            obstPercentage = 0;
         }
 }
