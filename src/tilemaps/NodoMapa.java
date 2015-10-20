@@ -9,11 +9,20 @@ package tilemaps;
    indicar si el punto puede ser transitado o no
    los valores de las funciones F, G y H para el algoritmo A*
 */
+
+    
 public class NodoMapa implements Comparable {
+    
+
+        public static final int INICIO = -1;
+        public static final int FINAL = -2;
+        private static final int VACIO = 0;
+        private static final int BLOQUEADA = 1;
     
         private int x;
         private int y;
-
+        private int tipoNodo;
+        
         private boolean transitable;
 
         private int coste;
@@ -49,7 +58,8 @@ public class NodoMapa implements Comparable {
 
                 transitable = true;
                 coste = 0;
-
+                tipoNodo = VACIO;
+                
                 F = 0;
                 G = 0;
                 H = 0;
@@ -199,6 +209,18 @@ public class NodoMapa implements Comparable {
                 return false;
         }
 
+        public int getTipo(){
+            return this.tipoNodo;
+        }
+        
+        public void setTipo(final int tipo){
+            
+            if (tipo == BLOQUEADA)
+                this.transitable = false;
+            
+            this.tipoNodo = tipo;
+        }
+        
         @Override
         public String toString()
         {

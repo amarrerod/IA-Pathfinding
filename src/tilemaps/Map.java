@@ -8,16 +8,10 @@ package tilemaps;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
 
@@ -26,27 +20,41 @@ public class Map {
        
 	public static final int TILE_SIZE = 15;
         public static final int INICIO = -1;
-        public static final int FINAL = 2;
+        public static final int FINAL = -2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
 	private int ancho, alto, x, y, obstPercentage;
-       
-        private Scanner rutaMapa;
-        public int[][] pixelesMapa; //Mapa 
+      
+ //       public int[][] pixelesMapa; //Mapa 
+        
+        public NodoMapa[][] pixelesMapa;
 
         private int xBeginMapa, yBeginMapa;
         private int xEndMapa, yEndMapa;
 
 	
-	public Map(final int ancho, final int alto) {
+	public Map(final int ancho, final int alto,
+                   final int inicioX, final int inicioY,
+                   final int finX, final int finY,
+                   final int porcentaje) {
 		
-            rutaMapa = null;
+           
             this.alto = alto;
             this.ancho = ancho;
-            pixelesMapa = new int [ancho][alto];
+            xBeginMapa = inicioX;
+            yBeginMapa = inicioY;
+            xEndMapa = finX;
+            yEndMapa = finY;
+            //pixelesMapa = new int [ancho][alto];
+            pixelesMapa = new NodoMapa[ancho][alto];
             
+            for(int i=0; i<ancho; i++)
+            for(int j=0; j<alto; j++)
+            pixelesMapa[i][j] = new NodoMapa();
+            
+            obstPercentage = porcentaje;
             generarMapaRandom();
-            // cargarMapa();       
+            
             
 	}
 	
@@ -57,13 +65,13 @@ public class Map {
                 for(int y=0; y < alto; y++){
                     
                    g.setColor(Color.gray);
-                    if(pixelesMapa[x][y] == BLOQUEADA)
+                    if(pixelesMapa[x][y].getTipo() == BLOQUEADA)
                         g.setColor(Color.darkGray);
                     
-                    if (pixelesMapa[x][y] == INICIO)
+                    if (pixelesMapa[x][y].getTipo() == INICIO)
                         g.setColor(Color.YELLOW);
                     
-                    if (pixelesMapa[x][y] == FINAL)
+                    if (pixelesMapa[x][y].getTipo() == FINAL)
                         g.setColor(Color.BLUE);
                     
                    
@@ -79,46 +87,46 @@ public class Map {
             }
         }
         
-        public void generarMapaRandom(){
+        //Recibimos un ArrayList y vamos sacando los elementos y pintadolos en el mapa
+        public void pintarCamino(ArrayList<NodoMapa> solucion, Graphics2D g){
             
-            int count = 0;
-            for(int y=0; y<alto; y++){
-                for(int x=0; x<ancho; x++){
-                    
-                  if(x == 0 || y == 0 ||
-                       x == ancho-1 || y == alto-1 )
-                        pixelesMapa[x][y] = 1;
-                            
-                  else {
-                   
-                      int i;
-                      if (( ((i = new Random().nextInt(2)) == 1) && (count == obstPercentage)))
-                                pixelesMapa[x][y] = 0;
-                      else{
-                            pixelesMapa[x][y] = i;
-                            count ++;
-                        }
-                      } 
-                }
-            }
+           while (!solucion.isEmpty()){
+               
+               g.setColor(Color.GREEN);
+               NodoMapa aux = solucion.remove(0); //Sacamos el primero
+               g.fillRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE,TILE_SIZE,TILE_SIZE);
+               
+           }
             
         }
-        //Cargamos un mapa desde un fichero
-        public void cargarMapa(){
-        
-            try{
-            rutaMapa = new Scanner(new File("src\\mapas\\mapa1.txt")); //Poner la ruta del fichero
-            }catch(FileNotFoundException e){
-                System.out.println("Fichero no encontrado \n");
-            }
-             
-            for(int x=0; x<alto; x++)
-                for(int y=0; y<ancho; y++)
-                   pixelesMapa[x][y] = rutaMapa.nextInt();
-    }
-
         
         
+        private void generarMapaRandom(){
+            
+            int count = 0;
+           try{
+                pixelesMapa[xBeginMapa][yBeginMapa].setTipo(INICIO);
+                pixelesMapa[xEndMapa][yEndMapa].setTipo(FINAL);
+                
+                while (count < obstPercentage){
+                    
+                    int i = new Random().nextInt(ancho);
+                    int j = new Random().nextInt(alto);
+                    
+                    if (pixelesMapa[i][j].getTipo() != INICIO &&
+                        pixelesMapa[i][j].getTipo() != FINAL){
+                     
+                        pixelesMapa[i][j].setTipo(BLOQUEADA);
+                        count++;
+                    }
+                    
+                }
+                    
+           }catch(ArrayIndexOutOfBoundsException excepcion){
+               System.out.println("Fuera del rango del array");
+           }
+            
+        }       
         
         public int[] getInicioMapa(){
             
@@ -144,11 +152,7 @@ public class Map {
             xEndMapa = x;
             yEndMapa = y;
         }
-        
-        public boolean celdaBloqueada(float x, float y) {
-		
-		return pixelesMapa[(int) x][(int) y] == BLOQUEADA;
-	}
+   
         
         public void setObstPercentage(final int percentage){
             
@@ -167,5 +171,17 @@ public class Map {
             ancho = 0;
             alto = 0;
             obstPercentage = 0;
+        }
+        
+        public NodoMapa[][] getMatriz(){
+            return pixelesMapa;
+        }
+        
+        public NodoMapa getInicio(){
+            return pixelesMapa[xBeginMapa][yBeginMapa];
+        }
+        
+        public NodoMapa getFin(){
+            return pixelesMapa[xEndMapa][yEndMapa];
         }
 }
