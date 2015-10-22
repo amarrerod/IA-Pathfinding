@@ -8,9 +8,9 @@ import java.util.ArrayList;
  */
 public class AlgoritmoAEstrella {
 
-    private NodoMapa[][] matriz;
-    private NodoMapa nodoInicio;
-    private NodoMapa nodoFinal;
+    private final NodoMapa[][] matriz;
+    private final NodoMapa nodoInicio;
+    private final NodoMapa nodoFinal;
 
     public AlgoritmoAEstrella(NodoMapa[][] matriz, NodoMapa inicio, NodoMapa fin) {
 
@@ -28,7 +28,7 @@ public class AlgoritmoAEstrella {
     public ArrayList calcularSendero() {
 
         Deap listaAbierta = new Deap(); //Creamos montículo doble
-        ArrayList listaCerrada = new ArrayList<NodoMapa>(); //La lista cerrada con las soluciones de tipo NodoMapa
+        ArrayList listaCerrada = new ArrayList<>(); //La lista cerrada con las soluciones de tipo NodoMapa
         NodoMapa nodoActual = null;
         boolean solucion = false;
 
@@ -49,7 +49,7 @@ public class AlgoritmoAEstrella {
             listaCerrada.add(nodoActual);
 
             //Sacamos a los vecinos del nodoActual
-            ArrayList nodosVecinos = new ArrayList<NodoMapa>();
+            ArrayList nodosVecinos = new ArrayList<>();
 
             boolean derecha = false, izquierda = false, arriba = false, abajo = false; //Posibles movimientos
             if (0 <= nodoActual.getX() + 1 && nodoActual.getX() + 1 < columnas
@@ -124,7 +124,7 @@ public class AlgoritmoAEstrella {
 		// Si hemos llegado al nodo final, volvemos hacia atrás desde ese nodo extrayendo el camino hasta el nodo inicial.
         if (solucion){
 	
-            ArrayList camino = new ArrayList<NodoMapa>();
+            ArrayList camino = new ArrayList<>();
             NodoMapa nodoAuxiliar = nodoFinal;
             while (nodoAuxiliar != null){
 				

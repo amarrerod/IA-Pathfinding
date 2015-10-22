@@ -51,10 +51,10 @@ public class NodoMapa implements Comparable {
         private NodoMapa nodoFinal; //Para poder calcula la estimación
 
 
-        public NodoMapa()
+        public NodoMapa(final int x, final int y)
         {
-                x = -1;
-                y = -1;
+                this.x = x;
+                this.y = y;
 
                 transitable = true;
                 coste = 0;
@@ -67,8 +67,8 @@ public class NodoMapa implements Comparable {
                 nodoPadre = null;
                 nodoFinal = null;
         }
-
-        /**
+        
+         /**
          * Compara dos nodos según su valor de F.
          * @param objeto Nodo con el que se va a comparar el nodo que invocó el
          * método.

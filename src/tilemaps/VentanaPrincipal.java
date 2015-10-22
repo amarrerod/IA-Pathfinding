@@ -268,7 +268,7 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
             map = new Map(x,y,inicioX,inicioY,finX,finY,porcentaje);
             pintarEntorno(map);  
             configurado = true;
-
+            map.printMapaString();
     }
     
     private void runAlgoritmo(){

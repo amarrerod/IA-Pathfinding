@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tilemaps;
 
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
-import javax.swing.JOptionPane;
+
 
 
 
@@ -25,7 +19,7 @@ public class Map {
         private static final int BLOQUEADA = 1;
 	private int ancho, alto, x, y, obstPercentage;
       
- //       public int[][] pixelesMapa; //Mapa 
+ 
         
         public NodoMapa[][] pixelesMapa;
 
@@ -45,14 +39,14 @@ public class Map {
             yBeginMapa = inicioY;
             xEndMapa = finX;
             yEndMapa = finY;
-            //pixelesMapa = new int [ancho][alto];
+       
             pixelesMapa = new NodoMapa[ancho][alto];
             
             for(int i=0; i<ancho; i++)
             for(int j=0; j<alto; j++)
-            pixelesMapa[i][j] = new NodoMapa();
+            pixelesMapa[i][j] = new NodoMapa(i,j);
             
-            obstPercentage = porcentaje;
+            this.obstPercentage = porcentaje;
             generarMapaRandom();
             
             
@@ -61,8 +55,8 @@ public class Map {
         public void pintarMapa(Graphics2D g){
             
             
-            for(int x = 0; x < ancho; x++){
-                for(int y=0; y < alto; y++){
+            for(int x = 0; x < this.ancho; x++){
+                for(int y=0; y < this.alto; y++){
                     
                    g.setColor(Color.gray);
                     if(pixelesMapa[x][y].getTipo() == BLOQUEADA)
@@ -90,11 +84,15 @@ public class Map {
         //Recibimos un ArrayList y vamos sacando los elementos y pintadolos en el mapa
         public void pintarCamino(ArrayList<NodoMapa> solucion, Graphics2D g){
             
+          
            while (!solucion.isEmpty()){
                
                g.setColor(Color.GREEN);
                NodoMapa aux = solucion.remove(0); //Sacamos el primero
+             //  System.out.println(aux.getX() + ", " + aux.getY() + "\n");
                g.fillRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE,TILE_SIZE,TILE_SIZE);
+               g.setColor(g.getColor().darker());
+               g.drawRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE, TILE_SIZE, TILE_SIZE);
                
            }
             
@@ -184,4 +182,13 @@ public class Map {
         public NodoMapa getFin(){
             return pixelesMapa[xEndMapa][yEndMapa];
         }
+
+        public void printMapaString(){
+            
+            for(int i=0; i<ancho; i++)
+            for(int j=0; j<alto; j++)
+                System.out.print(pixelesMapa[i][j] + "\t");
+        }    
+
+
 }

@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Scanner;
 import javax.imageio.ImageIO;
 
 
@@ -61,44 +60,6 @@ public class Agente {
             g.drawImage(spriteAgente, (int)(xp-16),(int)(yp-16), null);
 	    g.rotate(-ang,xp,yp);	
 	}
-//        
-//        public boolean posicionValida(float nx, float ny) {
-//		
-//		if (map.celdaBloqueada(nx - size, ny - size)) {
-//			return false;
-//		}
-//		if (map.celdaBloqueada(nx + size, ny - size)) {
-//			return false;
-//		}
-//		if (map.celdaBloqueada(nx - size, ny + size)) {
-//			return false;
-//		}
-//		if (map.celdaBloqueada(nx + size, ny + size)) {
-//			return false;
-//		}
-//		
-//		return true;
-//	}
-//	
-//        
-//        public boolean moverJugador (float dx, float dy){
-//            
-//            float nx = x + dx;
-//		float ny = y + dy;
-//		
-//		if (posicionValida(nx, ny)) {
-//			
-//                        x = nx;
-//			y = ny;
-//	
-//			ang = (float) (Math.atan2(dy, dx) - (Math.PI / 2));
-//			return true;
-//		}
-//		
-//		
-//		return false;
-//        }
-//        
-// 
+
 	
 }
