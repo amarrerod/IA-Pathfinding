@@ -17,7 +17,8 @@ public class Map {
         public static final int FINAL = -2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
-	private int x, y, obstPercentage;
+        private static final int SOLUCION = '*';
+	private int filas, columnas, obstPercentage;
       
  
         
@@ -33,8 +34,8 @@ public class Map {
                    final int porcentaje) {
 		
            
-            this.y = y;
-            this.x = x;
+            this.columnas = y;
+            this.filas = x;
             xBeginMapa = inicioX;
             yBeginMapa = inicioY;
             xEndMapa = finX;
@@ -56,8 +57,8 @@ public class Map {
         public void pintarMapa(Graphics2D g){
             
             
-            for(int i = 0; i < this.x; i++){
-                for(int j=0; j < this.y; j++){
+            for(int i = 0; i < this.filas; i++){
+                for(int j=0; j < this.columnas; j++){
                     
                    g.setColor(Color.gray);
                     if(pixelesMapa[i][j].getTipo() == BLOQUEADA)
@@ -71,10 +72,10 @@ public class Map {
                     
                    
                 g.fillRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                //g.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                //g.fillRect(filas*TILE_SIZE, columnas*TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 g.setColor(g.getColor().darker());
                 g.drawRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                //g.drawRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                //g.drawRect(filas*TILE_SIZE, columnas*TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
                 
             }
@@ -83,22 +84,34 @@ public class Map {
             }
         }
         
-        //Recibimos un ArrayList y vamos sacando los elementos y pintadolos en el mapa
-        public void pintarCamino(ArrayList<NodoMapa> solucion, Graphics2D g){
+        public void pintarMapa(Graphics2D g, Map mapa){
             
-          
-           while (!solucion.isEmpty()){
-               
-               g.setColor(Color.GREEN);
-               NodoMapa aux = solucion.remove(0); //Sacamos el primero
-               g.clearRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE,TILE_SIZE,TILE_SIZE);
-               g.setColor(g.getColor().darker());
-               g.drawRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-               
-               
-           }
-            
+            for(int i = 0; i < this.filas; i++){
+                for(int j=0; j < this.columnas; j++){
+                    
+                   g.setColor(Color.gray);
+                    if(mapa.getNodoAt(j, j).getTipo() == BLOQUEADA)
+                        g.setColor(Color.darkGray);
+                    
+                    if (mapa.getNodoAt(i,j).getTipo() == INICIO)
+                        g.setColor(Color.YELLOW);
+                    
+                    if (mapa.getNodoAt(i, j).getTipo() == FINAL)
+                        g.setColor(Color.BLUE);
+                    
+                    if (mapa.getNodoAt(i, j).getTipo() == SOLUCION)
+                        g.setColor(Color.GREEN);
+                    
+                g.fillRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                //g.fillRect(filas*TILE_SIZE, columnas*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                g.setColor(g.getColor().darker());
+                g.drawRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                //g.drawRect(filas*TILE_SIZE, columnas*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+                }   
+            }
         }
+
         
         
         private void generarMapaRandom(){
@@ -110,8 +123,8 @@ public class Map {
                 
                 while (count < obstPercentage){
                     
-                    int i = new Random().nextInt(x);
-                    int j = new Random().nextInt(y);
+                    int i = new Random().nextInt(filas);
+                    int j = new Random().nextInt(columnas);
                     
                     if (pixelesMapa[i][j].getTipo() != INICIO &&
                         pixelesMapa[i][j].getTipo() != FINAL){
@@ -157,8 +170,8 @@ public class Map {
         public void resetMapa(){
             
             pixelesMapa = null; //Resetamos el array
-            x = 0;
-            y= 0;
+            filas = 0;
+            columnas= 0;
             xBeginMapa = 0;
             yBeginMapa = 0;
             xEndMapa = 0;
@@ -177,21 +190,26 @@ public class Map {
 
         public void printMapaString(){
             
-            for(int i=0; i<x; i++)
-            for(int j=0; j<y; j++)
+            for(int i=0; i<filas; i++)
+            for(int j=0; j<columnas; j++)
                 System.out.print(pixelesMapa[i][j] + "\n");
         }    
 
-        public final int getX(){
-            return x;
+        public final int getFilas(){
+            return filas;
         }
 
-        public final int getY(){
-            return y;
+        public final int getColumnas(){
+            return columnas;
         }
         
         public NodoMapa getNodoAt(final int x, final int y){
             return pixelesMapa[x][y];
+        }
+        
+        public void cambiarValorNodo(final int x, final int y, final int valor){
+            
+            pixelesMapa[x][y].setTipo(valor);
         }
         
 }

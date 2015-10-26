@@ -20,7 +20,8 @@ public class NodoMapa implements Comparable {
         public static final int FINAL = -2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
-    
+        private static final int SOLUCION = '*';
+        
         private int x;
         private int y;
         private int tipoNodo;

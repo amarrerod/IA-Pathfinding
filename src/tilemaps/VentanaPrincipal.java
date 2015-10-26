@@ -280,11 +280,11 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
             map = new Map(x,y,inicioX,inicioY,finX,finY,porcentaje);
             pintarEntorno(map);  
             configurado = true;
-            runAlgoritmo(map);
+           
      
     }
     
-    private void runAlgoritmo(Map mapa){
+    private void runAlgoritmo(){
         
       try{
            if (configurado == false)
@@ -294,8 +294,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
       }
       
       
-      AlgoritmoAEstrella AEstrella = new AlgoritmoAEstrella(mapa,mapa.getInicio(),mapa.getFin());
-     
+      AlgoritmoAEstrella AEstrella = new AlgoritmoAEstrella(map,map.getInicio(),map.getFin());
+      System.out.println("Se han ejecutado: " + AEstrella.getIteraciones() + " iteraciones\n");
       Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
     
       try {
@@ -307,11 +307,14 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
            
         }
         else{
-            System.out.println("Pintando la solucion: \n" + solucion);
-            map.pintarCamino(solucion, g);
-            
-           
+            System.out.println("Tenemos la solucion");
+            System.out.println();
+            System.out.println(solucion);
+            System.out.println("Se han ejecutado: " + AEstrella.getIteraciones() + " iteraciones");
         }
+        
+        
+              
       }catch(Exception e){
           
           JOptionPane.showMessageDialog(this, e.getMessage());
@@ -352,9 +355,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
         if ( o == botonSetup)
             this.setupEntorno();
         
+        else
+            this.runAlgoritmo();
         
-     
-
-
-}
+          }
 }
