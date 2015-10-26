@@ -1,6 +1,8 @@
 
 package tilemaps;
 
+import static java.lang.Math.pow;
+
 
 /* Clase para representar cada uno de los nodos del mapa
    con los valores xy de la posición
@@ -25,11 +27,9 @@ public class NodoMapa implements Comparable {
         
         private boolean transitable;
 
-        private int coste;
-
         /**
          * Valor total del nodo.
-         * F = G + H + coste
+         * F = G + H*
          */
         private int F;
 
@@ -40,10 +40,9 @@ public class NodoMapa implements Comparable {
         private int G;
 
         /**
-         * Valor desde el nodo hasta el nodo final.
-         * Se considera el peor caso, en el no se pueden hacer diagonales, por lo
-         * tanto, H + 10*(diferencia de filas + diferencia de columnas entre el nodo
-         * y el nodo final).
+         * Valor de la heurística para hacer el cálculo de F
+         * Usando las fórmulas de Distancia Manhattan y
+         * distancia Euclides para hallar el valor de H 
          */
         private int H;
 
@@ -57,7 +56,6 @@ public class NodoMapa implements Comparable {
                 this.y = y;
 
                 transitable = true;
-                coste = 0;
                 tipoNodo = VACIO;
                 
                 F = 0;
@@ -75,6 +73,7 @@ public class NodoMapa implements Comparable {
          * @return Devuelve 1 si el nodo que invocó el método tiene menor F,
          * devuelve 0 si son iguales o -1 en otro caso.
          */
+        @Override
         public int compareTo(Object objeto)
         {
                 if (F > ((NodoMapa) objeto).F) return 1;
@@ -110,11 +109,11 @@ public class NodoMapa implements Comparable {
         }
 
         /**
-         * Recalcula el valor de F. Cuando G, H o coste han cambiado.
+         * Recalcula el valor de F. Cuando G, H han cambiado.
          */
         private void recalcularF()
         {
-                F = G + H + coste;
+                F = G + H;
         }
 
         /**
@@ -133,16 +132,14 @@ public class NodoMapa implements Comparable {
         /**
          * Recalcula el valor de H. Normalmente, cuando el nodo final ha cambiado.
          */
-        private void recalcularH()
-        {
-                if (nodoFinal != null)
-                {
-                        H = (Math.abs(x-nodoFinal.x) + Math.abs(y-nodoFinal.y))*10;
-                }
-                else
-                {
-                        H = 0;
-                }
+        private void recalcularH(){
+            
+            if (nodoFinal != null)
+            //H = distManhattan();
+            H = distEuclides();
+            else
+                H = 0;
+      
                 recalcularF();
         }
 
@@ -193,22 +190,8 @@ public class NodoMapa implements Comparable {
                 this.transitable = transitable;
         }
 
-        public int getCoste()
-        {
-                return coste;
-        }
-
-        public boolean setCoste(int coste)
-        {
-                if (coste >= 0)
-                {
-                        this.coste = coste;
-                        recalcularF();
-                        return true;
-                }
-                return false;
-        }
-
+            
+        //Util a la hora de pintar el mapa para saber el color
         public int getTipo(){
             return this.tipoNodo;
         }
@@ -216,15 +199,40 @@ public class NodoMapa implements Comparable {
         public void setTipo(final int tipo){
             
             if (tipo == BLOQUEADA)
-                this.transitable = false;
+                setTransitable(true);
+           else
+                 setTransitable(true);           
             
             this.tipoNodo = tipo;
+        }
+        
+        /*@parms:
+        * @return: Nos devuelve la distancia mediante la fórmula Manhattan entre 
+        * el nodo actual y el nodo final
+        */
+        private int distManhattan(){
+            
+            return  (Math.abs(x-nodoFinal.getX()) + Math.abs(y-nodoFinal.getY()));
+            
+        }
+        
+        /*@parms:
+        * @return: Nos devuelve la distancia
+        * mediante la fórmula de Euclides
+        * entre el nodo actual y el nodo final
+        */
+        private int distEuclides(){
+            
+            int aux1 = (int) pow((x - nodoFinal.getX()),2);
+            int aux2 = (int) pow((y - nodoFinal.getY()),2);
+            return (int)Math.sqrt((aux1-aux2));
+            
         }
         
         @Override
         public String toString()
         {
-                return "(" + y + ", " + x + ")";
+                return "(" + x + ", " + y + ")";
         }
 
 }

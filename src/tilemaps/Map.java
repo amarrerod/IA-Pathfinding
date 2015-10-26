@@ -17,7 +17,7 @@ public class Map {
         public static final int FINAL = -2;
         private static final int VACIO = 0;
         private static final int BLOQUEADA = 1;
-	private int ancho, alto, x, y, obstPercentage;
+	private int x, y, obstPercentage;
       
  
         
@@ -27,25 +27,26 @@ public class Map {
         private int xEndMapa, yEndMapa;
 
 	
-	public Map(final int ancho, final int alto,
+	public Map(final int x, final int y,
                    final int inicioX, final int inicioY,
                    final int finX, final int finY,
                    final int porcentaje) {
 		
            
-            this.alto = alto;
-            this.ancho = ancho;
+            this.y = y;
+            this.x = x;
             xBeginMapa = inicioX;
             yBeginMapa = inicioY;
             xEndMapa = finX;
             yEndMapa = finY;
        
-            pixelesMapa = new NodoMapa[ancho][alto];
+            pixelesMapa = new NodoMapa[x][y];
             
-            for(int i=0; i<ancho; i++)
-            for(int j=0; j<alto; j++)
-            pixelesMapa[i][j] = new NodoMapa(i,j);
-            
+            for(int i=0; i<x; i++)
+                for(int j=0; j<y; j++){
+                    pixelesMapa[i][j] = new NodoMapa(i,j);
+                    pixelesMapa[i][j].setNodoFinal(getFin());
+                }
             this.obstPercentage = porcentaje;
             generarMapaRandom();
             
@@ -55,25 +56,26 @@ public class Map {
         public void pintarMapa(Graphics2D g){
             
             
-            for(int x = 0; x < this.ancho; x++){
-                for(int y=0; y < this.alto; y++){
+            for(int i = 0; i < this.x; i++){
+                for(int j=0; j < this.y; j++){
                     
                    g.setColor(Color.gray);
-                    if(pixelesMapa[x][y].getTipo() == BLOQUEADA)
+                    if(pixelesMapa[i][j].getTipo() == BLOQUEADA)
                         g.setColor(Color.darkGray);
                     
-                    if (pixelesMapa[x][y].getTipo() == INICIO)
+                    if (pixelesMapa[i][j].getTipo() == INICIO)
                         g.setColor(Color.YELLOW);
                     
-                    if (pixelesMapa[x][y].getTipo() == FINAL)
+                    if (pixelesMapa[i][j].getTipo() == FINAL)
                         g.setColor(Color.BLUE);
                     
                    
-                
-                g.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                g.fillRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                //g.fillRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 g.setColor(g.getColor().darker());
-                g.drawRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                
+                g.drawRect(j*TILE_SIZE, i*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                //g.drawRect(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
                 
             }
             
@@ -89,10 +91,10 @@ public class Map {
                
                g.setColor(Color.GREEN);
                NodoMapa aux = solucion.remove(0); //Sacamos el primero
-             //  System.out.println(aux.getX() + ", " + aux.getY() + "\n");
-               g.fillRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE,TILE_SIZE,TILE_SIZE);
+               g.clearRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE,TILE_SIZE,TILE_SIZE);
                g.setColor(g.getColor().darker());
                g.drawRect(aux.getX()*TILE_SIZE, aux.getY()*TILE_SIZE, TILE_SIZE, TILE_SIZE);
+               
                
            }
             
@@ -108,13 +110,14 @@ public class Map {
                 
                 while (count < obstPercentage){
                     
-                    int i = new Random().nextInt(ancho);
-                    int j = new Random().nextInt(alto);
+                    int i = new Random().nextInt(x);
+                    int j = new Random().nextInt(y);
                     
                     if (pixelesMapa[i][j].getTipo() != INICIO &&
                         pixelesMapa[i][j].getTipo() != FINAL){
                      
                         pixelesMapa[i][j].setTipo(BLOQUEADA);
+                        pixelesMapa[i][j].setTransitable(false);
                         count++;
                     }
                     
@@ -126,18 +129,6 @@ public class Map {
             
         }       
         
-        public int[] getInicioMapa(){
-            
-            int[] valores = {xBeginMapa, yBeginMapa};
-            return (valores);
-        }
-        
-        public int[] getFinalMapa(){
-            
-            int[] valores = {xEndMapa, yEndMapa};
-            return (valores);
-            
-        }
         
         public void setInicioMapa(int x, int y){
             
@@ -166,15 +157,16 @@ public class Map {
         public void resetMapa(){
             
             pixelesMapa = null; //Resetamos el array
-            ancho = 0;
-            alto = 0;
+            x = 0;
+            y= 0;
+            xBeginMapa = 0;
+            yBeginMapa = 0;
+            xEndMapa = 0;
+            yEndMapa = 0;
             obstPercentage = 0;
         }
         
-        public NodoMapa[][] getMatriz(){
-            return pixelesMapa;
-        }
-        
+           
         public NodoMapa getInicio(){
             return pixelesMapa[xBeginMapa][yBeginMapa];
         }
@@ -185,10 +177,21 @@ public class Map {
 
         public void printMapaString(){
             
-            for(int i=0; i<ancho; i++)
-            for(int j=0; j<alto; j++)
-                System.out.print(pixelesMapa[i][j] + "\t");
+            for(int i=0; i<x; i++)
+            for(int j=0; j<y; j++)
+                System.out.print(pixelesMapa[i][j] + "\n");
         }    
 
+        public final int getX(){
+            return x;
+        }
 
+        public final int getY(){
+            return y;
+        }
+        
+        public NodoMapa getNodoAt(final int x, final int y){
+            return pixelesMapa[x][y];
+        }
+        
 }

@@ -5,7 +5,6 @@
  */
 package tilemaps;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -14,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 
@@ -23,7 +23,6 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
     private boolean configurado = false;
     private final String nombre = "Inteligencia Artificial";
     private static Map map;
-    private  static Agente jugador;
     private BufferStrategy strategy;
     private MouseListener mouseListen;
 
@@ -32,6 +31,8 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
         initComponents();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle(nombre);
+        ImageIcon icono = new ImageIcon("res/safari.png");
+        setIconImage(icono.getImage());
         this.setSize(1024,800);
         setResizable(false);
         this.setLocationRelativeTo(null);
@@ -107,34 +108,35 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(inicioYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(inicioXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inicioYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(finXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(finYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(finXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel2)
+                        .addGap(23, 23, 23)
+                        .addComponent(filasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
-                        .addGap(10, 10, 10)
-                        .addComponent(filasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(columnasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(35, 35, 35)
                         .addComponent(obstSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(26, 26, 26)
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(botonSetup, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(botonIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(152, 152, 152))
+                        .addGap(47, 47, 47))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(canvasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 994, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -142,27 +144,28 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(inicioYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(inicioXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel4)
-                        .addComponent(finYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(finXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(jLabel1)
-                        .addComponent(filasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(columnasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(obstSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botonIniciar)
-                            .addComponent(botonSetup))
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(16, 16, 16)
-                .addComponent(canvasPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botonIniciar)
+                        .addComponent(botonSetup)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(31, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(columnasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel5)
+                                .addComponent(finYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(finXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4)
+                                .addComponent(inicioYSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(inicioXSpin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(filasSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(obstSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19)
+                .addComponent(canvasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 661, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -232,46 +235,56 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
     private void setupEntorno(){
         
 
-   // Creamos el mapa
+            // Creamos el mapa
+            if (map != null)
+                map.resetMapa();
+            
             configurado = false;
             int inicioX,inicioY, finX,finY;
         
-            inicioX = (int)inicioYSpin.getValue();
-            inicioY = (int)inicioXSpin.getValue();
-            finX = (int)finYSpin.getValue();
-            finY = (int) finXSpin.getValue();
+            inicioX = (int)inicioXSpin.getValue();
+            inicioY = (int)inicioYSpin.getValue();
+            finX = (int)finXSpin.getValue();
+            finY = (int) finYSpin.getValue();
             int porcentaje;
             int x = (int) filasSpinner.getValue(); 
             int y = (int)columnasSpinner.getValue();
             porcentaje = ((x*y)*obstSlider.getValue())/100; 
+            
             try {
               
-                if(inicioX > x || inicioX < 0)
+                if(inicioX >= x || inicioX < 0)
                     throw new ExcepcionesPersonales("SE HA SALIDO DEL RANGO");
                 
-                if (inicioY > y || inicioY < 0)
+                if (inicioY >= y || inicioY < 0)
                       throw new ExcepcionesPersonales("SE HA SALIDO DEL RANGO");
                 
-                if (finX > x || finX < 0)
+                if (finX >= x || finX < 0)
                       throw new ExcepcionesPersonales("SE HA SALIDO DEL RANGO");
                 
-                if (finY > y || finY <0)
+                if (finY >= y || finY <0)
                       throw new ExcepcionesPersonales("SE HA SALIDO DEL RANGO");
+                
+                if ( x <= 0)
+                    throw new ExcepcionesPersonales("No pueden haber 0 filas");
+                
+                if (y <= 0)
+                    throw new ExcepcionesPersonales("No pueden haber 0 columnas");
+                
             }catch (Exception e){
             
                 JOptionPane.showMessageDialog(this,e.getMessage());
 
             }
-            
-                
-                
+                        
             map = new Map(x,y,inicioX,inicioY,finX,finY,porcentaje);
             pintarEntorno(map);  
             configurado = true;
-            map.printMapaString();
+            runAlgoritmo(map);
+     
     }
     
-    private void runAlgoritmo(){
+    private void runAlgoritmo(Map mapa){
         
       try{
            if (configurado == false)
@@ -281,21 +294,24 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
       }
       
       
-      AlgoritmoAEstrella AEstrella = new AlgoritmoAEstrella(map.getMatriz(),map.getInicio(),map.getFin());
+      AlgoritmoAEstrella AEstrella = new AlgoritmoAEstrella(mapa,mapa.getInicio(),mapa.getFin());
      
       Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-    //Se ejecuta y nos devuelve un ArrayList con la solucion
-      
+    
       try {
           
-        ArrayList<NodoMapa> solucion = AEstrella.calcularSendero();
-        System.out.print(solucion);
-        if( solucion == null)
-            throw new ExcepcionesPersonales("No hay solución");
+         ArrayList<NodoMapa> solucion = AEstrella.calcularSendero();
         
-        else
+        if( solucion == null){
+            throw new ExcepcionesPersonales("No hay solución");
+           
+        }
+        else{
+            System.out.println("Pintando la solucion: \n" + solucion);
             map.pintarCamino(solucion, g);
-      
+            
+           
+        }
       }catch(Exception e){
           
           JOptionPane.showMessageDialog(this, e.getMessage());
@@ -336,9 +352,9 @@ public class VentanaPrincipal extends javax.swing.JFrame implements ActionListen
         if ( o == botonSetup)
             this.setupEntorno();
         
-        else
-            runAlgoritmo();   
-    
-    }
+        
+     
 
+
+}
 }

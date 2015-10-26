@@ -8,16 +8,19 @@ import java.util.ArrayList;
  */
 public class AlgoritmoAEstrella {
 
-    private final NodoMapa[][] matriz;
+    private final Map matriz;
     private final NodoMapa nodoInicio;
     private final NodoMapa nodoFinal;
+    private int iteraciones;
+    
+    private int F;
+    
+    public AlgoritmoAEstrella(Map mapa, NodoMapa inicio, NodoMapa fin) {
 
-    public AlgoritmoAEstrella(NodoMapa[][] matriz, NodoMapa inicio, NodoMapa fin) {
-
-        this.matriz = matriz;
+        this.matriz = mapa;
         this.nodoInicio = inicio;
         this.nodoFinal = fin;
-
+        iteraciones = 0;
     }
 
     /* Ejecuta el algoritmo A* para encontrar el camino
@@ -32,111 +35,100 @@ public class AlgoritmoAEstrella {
         NodoMapa nodoActual = null;
         boolean solucion = false;
 
-        int filas = matriz.length; 
-        int columnas = 0;
-        if (filas > 0) {
-            columnas = matriz[0].length;
-        }
+        int filas = matriz.getX();
+        int columnas = matriz.getY();
+     
 
         listaAbierta.push(nodoInicio); //Metemos en la lista abierta el nodo de salida
-        int it = 0; //Iteraciones del algoritmo
+       
 
-        //Buscamos el camino mientras hayan opciones y no haya sido encontrado
-        while (!listaAbierta.isEmpty() && !solucion) {
-
-            it++;
-            nodoActual = (NodoMapa) listaAbierta.popBottom();
+        //Mientras queden nodos en la lista abierta
+        // O no hayamos encontrado la solucion
+	while ((!listaAbierta.isEmpty()) || (!solucion)){
+         
+            
+            iteraciones++; //Nueva iteracion
+            nodoActual = (NodoMapa)listaAbierta.popBottom(); //Sacamos un nodo (con menor F)de la lista abierta
             listaCerrada.add(nodoActual);
-
-            //Sacamos a los vecinos del nodoActual
-            ArrayList nodosVecinos = new ArrayList<>();
-
-            boolean derecha = false, izquierda = false, arriba = false, abajo = false; //Posibles movimientos
-            if (0 <= nodoActual.getX() + 1 && nodoActual.getX() + 1 < columnas
-                    && 0 <= nodoActual.getY() && nodoActual.getY() < filas) {
-
-                if (matriz[nodoActual.getY()][nodoActual.getX() + 1].getTransitable()) {
-                    nodosVecinos.add(matriz[nodoActual.getY()][nodoActual.getX() + 1]);
-                    derecha = true;
+            
+            ArrayList nodosAdyacentes = new ArrayList<NodoMapa>();
+            boolean moDer = false, moIzq = false, movUp = false, moAbj = false;
+            
+            
+            if ( (nodoActual.getY()+1 <= columnas))    
+                if (matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()+1).getTransitable())
+                    nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()+1));
+                    moDer= true;
+                                
+            if ( (0 <= nodoActual.getY()-1) )   
+                if (matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()-1).getTransitable())
+                    nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()-1));
+                    moIzq= true;
+                                
+            
+            if ( ( 0 <= nodoActual.getX()-1) )    
+                if (matriz.getNodoAt(nodoActual.getX()-1,nodoActual.getY()).getTransitable())
+                    nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX()-1,nodoActual.getY()));
+                    movUp = true;
+                         
+            
+              if ( ( nodoActual.getX()+1 <= filas) )          
+                if (matriz.getNodoAt(nodoActual.getX()+1,nodoActual.getY()).getTransitable())
+                    nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX()+1,nodoActual.getY()));
+                    moAbj = true;
+   
+            //Para cada uno de los nodos encontrados debemos comprobar si hemos llegado al final
+            while(!nodosAdyacentes.isEmpty() && (!solucion)){
+             
+               NodoMapa nodoVecino = (NodoMapa) nodosAdyacentes.remove(0);
+               
+                if (!listaCerrada.contains(nodoVecino)){
+                   if (!listaAbierta.contains(nodoVecino)){
+                       nodoVecino.setNodoPadre(nodoActual);
+                       listaAbierta.push(nodoVecino);
+                   }
+                   //Si el nodo coincide con el final hemos encontrado la solucion
+                   if (nodoFinal == nodoVecino)
+                          solucion  = true;
                 }
-            }
-
-            if (0 <= nodoActual.getX() - 1 && nodoActual.getX() - 1 < columnas
-                    && 0 <= nodoActual.getY() && nodoActual.getY() < filas) {
-
-                if (matriz[nodoActual.getY()][nodoActual.getX() - 1].getTransitable()) {
-                    nodosVecinos.add(matriz[nodoActual.getY()][nodoActual.getX() - 1]);
-                    izquierda = true;
-                }
-            }
-
-            if (0 <= nodoActual.getX() && nodoActual.getX() < columnas
-                    && 0 <= nodoActual.getY() - 1 && nodoActual.getY() - 1 < filas) {
-
-                if (matriz[nodoActual.getY() - 1][nodoActual.getX()].getTransitable()) {
-                    nodosVecinos.add(matriz[nodoActual.getY() - 1][nodoActual.getX()]);
-                    arriba = true;
-                }
-            }
-
-            if (0 <= nodoActual.getX() && nodoActual.getX() < columnas
-                    && 0 <= nodoActual.getY() + 1 && nodoActual.getY() + 1 < filas) {
-
-                if (matriz[nodoActual.getY() + 1][nodoActual.getX()].getTransitable()) {
-                    nodosVecinos.add(matriz[nodoActual.getY() + 1][nodoActual.getX()]);
-                    abajo = true;
-                }
-            }
-
-       // Para cada nodo encontrado, comprobamos si hemos llegado al punto de destino.
-	while (!nodosVecinos.isEmpty() && !solucion){
-	
-            NodoMapa nodoAdyacente = (NodoMapa) nodosVecinos.remove(0);
-            if (!listaCerrada.contains(nodoAdyacente)){
-		
-                if (!listaAbierta.contains(nodoAdyacente)){
-                    nodoAdyacente.setNodoPadre(nodoActual);
-		    listaAbierta.push(nodoAdyacente);
-
-                    if (nodoFinal == nodoAdyacente)
-			solucion = true;
-		}
-            else {
-	
-                int nuevoG = nodoActual.getG();
-                    if (nodoAdyacente.getX()==nodoActual.getX() ||
-                        nodoAdyacente.getY()==nodoActual.getY())
-                        
+                else{
+                    int nuevoG = nodoActual.getG();
+                    if (nodoVecino.getX()== nodoActual.getX() ||
+                         nodoVecino.getY()== nodoActual.getY())
                             nuevoG += 10;
-                    else
+                        else
                             nuevoG += 14;
 
-                    if (nuevoG < nodoAdyacente.getG()){
-                        nodoAdyacente.setNodoPadre(nodoActual);
+                    if (nuevoG < nodoVecino.getG()){
+                        nodoVecino.setNodoPadre(nodoActual);
                         listaAbierta.reordenar();
                     }
-		}
                 }
-	}
-	}
-
-
-		// Si hemos llegado al nodo final, volvemos hacia atrás desde ese nodo extrayendo el camino hasta el nodo inicial.
-        if (solucion){
-	
-            ArrayList camino = new ArrayList<>();
-            NodoMapa nodoAuxiliar = nodoFinal;
-            while (nodoAuxiliar != null){
-				
-               camino.add(0, nodoAuxiliar);
-                nodoAuxiliar = nodoAuxiliar.getNodoPadre();
-		
+               
             }
-	
-            return camino;
-	}
-		
-        else 
-            return null;
-	}
+        }
+                                 
+        
+        if (solucion){
+                     
+        ArrayList camino = new ArrayList<NodoMapa>();
+        NodoMapa nodoAuxiliar = nodoFinal;
+        while (nodoAuxiliar != null){
+            camino.add(0, nodoAuxiliar);
+            nodoAuxiliar = nodoAuxiliar.getNodoPadre();
+        }
+        return camino;
+        }
+        
+        else            
+        return null;
+    
+        }
+    
+    
+    //Nos devuelve el numero de iteraciones del algoritmo
+    public final int getIteraciones(){
+        return this.iteraciones;
+    }
+    
 }
