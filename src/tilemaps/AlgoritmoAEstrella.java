@@ -1,18 +1,35 @@
-package tilemaps;
 
-import java.util.ArrayList;
 
 /**
  *
- * @author Alejandro Marrero
+ * @author Alejandro Marrero Díaz
+ * @contact: alu0100825008@ull.edu.es
+ * @version 1.0
+ * @career: Grado en Ingeniería Informática
+ * @College: Universidad de La Laguna
+ * @subject: Inteligencia Artificial
+ * @course: 3
+ * 
+ * 
  */
+
+
+package tilemaps;
+import java.util.ArrayList;
+
+//Clase para implementar el algoritmo A*
 public class AlgoritmoAEstrella {
 
+   //Mapa sobre el que se ejecuta el algoritmo
     private final Map matriz;
+    //Nodo inicial para el algoritmo
     private final NodoMapa nodoInicio;
+    //Objetivo para el algorimot
     private final NodoMapa nodoFinal;
+    //Numero de iteracciones que realiza el algoritmo
     private int iteraciones;
     
+    //Valor F de la funcion
     private int F;
     
     public AlgoritmoAEstrella(Map mapa, NodoMapa inicio, NodoMapa fin) {
@@ -46,7 +63,6 @@ public class AlgoritmoAEstrella {
         // O no hayamos encontrado la solucion
 	while ((!listaAbierta.isEmpty()) && !solucion){
          
-            System.out.println("En el bucle principal de A*\n");
             iteraciones++; //Nueva iteracion
             nodoActual = (NodoMapa)listaAbierta.popBottom(); //Sacamos un nodo (con menor F)de la lista abierta
             listaCerrada.add(nodoActual);
@@ -54,37 +70,38 @@ public class AlgoritmoAEstrella {
             ArrayList nodosAdyacentes = new ArrayList<NodoMapa>();
             boolean moDer = false, moIzq = false, movUp = false, moAbj = false;
             
-            System.out.println("Primer IF");
+            //Ahora tenemos que comprobar todos los nodos vecinos al nodo extraido
+            //Y ver si pueden ser transitables
+    
             if ( (0 <= nodoActual.getX())   && (nodoActual.getX()< filas) &&
                  (0 <= nodoActual.getY())   && (nodoActual.getY()+1 < columnas))    
                 if (matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()+1).getTransitable())
                     nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()+1));
                     moDer= true;
-                                
-            System.out.println("Segundo IF");
+      
             if ( (0<= nodoActual.getX())    &&  (nodoActual.getX() < filas) &&
                  (0 <= nodoActual.getY()-1)   && (nodoActual.getY()< columnas))   
                 if (matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()-1).getTransitable())
                     nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX(),nodoActual.getY()-1));
                     moIzq= true;
                                 
-            System.out.println("Tercer IF");
+
             if ( (0 <= nodoActual.getX()-1)    && (nodoActual.getX() < filas) &&
                  ( 0 <= nodoActual.getY()) && (nodoActual.getY() < columnas))    
                 if (matriz.getNodoAt(nodoActual.getX()-1,nodoActual.getY()).getTransitable())
                     nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX()-1,nodoActual.getY()));
                     movUp = true;
-                         
-            System.out.println("Cuarto IF");
+
               if ( (0 <= nodoActual.getX())  && (nodoActual.getX()+1 < filas) &&
                    ( 0 <= nodoActual.getY()) && (nodoActual.getY() < columnas))          
                 if (matriz.getNodoAt(nodoActual.getX()+1,nodoActual.getY()).getTransitable())
                     nodosAdyacentes.add(matriz.getNodoAt(nodoActual.getX()+1,nodoActual.getY()));
                     moAbj = true;
    
-            //Para cada uno de los nodos encontrados debemos comprobar si hemos llegado al final
+            //Para cada uno de los nodos encontrados 
+            //debemos comprobar si hemos llegado al final
             while(!nodosAdyacentes.isEmpty() && !solucion){
-             System.out.println("Bucle secundario\n");
+             
                NodoMapa nodoVecino = (NodoMapa) nodosAdyacentes.remove(0);
                
                 if (!listaCerrada.contains(nodoVecino)){
@@ -94,8 +111,7 @@ public class AlgoritmoAEstrella {
                    
                    //Si el nodo coincide con el final hemos encontrado la solucion
                    if (nodoFinal == nodoVecino){
-                       System.out.println("Solucion encontrada");
-                       solucion  = true;
+                        solucion  = true;
                      }
                    }
                 else{
@@ -116,8 +132,9 @@ public class AlgoritmoAEstrella {
         }
                                  
         
+        //Si tenemos la solucion..
         if (solucion){
-     
+        //Creamos el ArrayList que vamos a devolver
         ArrayList camino = new ArrayList<NodoMapa>();
         NodoMapa nodoAuxiliar = nodoFinal;
         while (nodoAuxiliar != null){
@@ -128,7 +145,7 @@ public class AlgoritmoAEstrella {
         return camino;
         }
         
-        else
+        else //Si no hay solucion devolvemos un null
             return null;
         
         }

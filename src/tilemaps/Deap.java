@@ -1,10 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ *
+ * @author Alejandro Marrero Díaz
+ * @contact: alu0100825008@ull.edu.es
+ * @version 1.0
+ * @career: Grado en Ingeniería Informática
+ * @College: Universidad de La Laguna
+ * @subject: Inteligencia Artificial
+ * @course: 3
+ * 
+ * 
  */
 package tilemaps;
-
 import java.util.ArrayList;
 import java.util.Collections;
 

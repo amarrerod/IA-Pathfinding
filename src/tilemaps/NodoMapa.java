@@ -1,6 +1,18 @@
 
-package tilemaps;
 
+/**
+ *
+ * @author Alejandro Marrero Díaz
+ * @contact: alu0100825008@ull.edu.es
+ * @version 1.0
+ * @career: Grado en Ingeniería Informática
+ * @College: Universidad de La Laguna
+ * @subject: Inteligencia Artificial
+ * @course: 3
+ * 
+ * 
+ */
+package tilemaps;
 import static java.lang.Math.pow;
 
 
@@ -47,7 +59,7 @@ public class NodoMapa implements Comparable {
          */
         private int H;
 
-        private NodoMapa nodoPadre;
+        private NodoMapa nodoPadre; //Padre del nodo en el que estamos
         private NodoMapa nodoFinal; //Para poder calcula la estimación
 
 
@@ -56,6 +68,7 @@ public class NodoMapa implements Comparable {
                 this.x = x;
                 this.y = y;
 
+                //Al inicio suponemos que todos son transitables
                 transitable = true;
                 tipoNodo = VACIO;
                 
@@ -82,11 +95,12 @@ public class NodoMapa implements Comparable {
                 else return 0;
         }
 
-   
+        //Devuelve la coordenada x del nodo
         public int getX(){
                 return x;
         }
-
+        
+        //Nos permite cambiar la coordenada x del nodo
         public boolean setX(int x){
                 if (x >= 0)
                 {
@@ -96,10 +110,12 @@ public class NodoMapa implements Comparable {
                 return false;
         }
 
+        //Nos devuelve la coordenada Y del nodo
         public int getY(){
                 return y;
         }
 
+        //Nos permite cambiar la coordenada Y del nodo
         public boolean setY(int y){
                 if (y >= 0)
                 {
@@ -118,7 +134,7 @@ public class NodoMapa implements Comparable {
         }
 
         /**
-         * Recalcula el valor de G. Cuando el padre se ha modificado.
+         * Recalcula el valor de G. Cuando el valor del padre se ha modificado.
          */
         private void recalcularG()
         {
@@ -144,6 +160,7 @@ public class NodoMapa implements Comparable {
                 recalcularF();
         }
 
+        //Getters de los valores F, G, H
         public int getF(){
                 return F;
         }
@@ -155,37 +172,39 @@ public class NodoMapa implements Comparable {
                 return H;
         }
 
-        
+        //Obtenemos el nodoPadre deeste Nodo actual       
         public NodoMapa getNodoPadre()
         {
                 return nodoPadre;
         }
 
+        //Definir el nodoPadre de este nodo
         public void setNodoPadre(NodoMapa nodoPadre)
         {
                 this.nodoPadre = nodoPadre;
                 recalcularG();
         }
 
+        //Devolvemos el nodo objetivo
         public NodoMapa getNodoFinal()
         {
                 return nodoFinal;
         }
 
-   
+        //Definimos cual es el nodo objetivo dentro del mapa
         public void setNodoFinal(NodoMapa nodoFinal)
         {
                 this.nodoFinal = nodoFinal;
                 recalcularH();
         }
 
-       
+       //Devuelve si el nodo es transitable o no
         public boolean getTransitable()
         {
                 return transitable;
         }
 
-        
+        //Definimos a un nodo como transitable o no
         public void setTransitable(boolean transitable)
         {
                 this.transitable = transitable;
@@ -197,10 +216,11 @@ public class NodoMapa implements Comparable {
             return this.tipoNodo;
         }
         
+        //Definir que tipo de nodo se trata: Vacio, solucion, bloqueado...etc
         public void setTipo(final int tipo){
             
             if (tipo == BLOQUEADA)
-                setTransitable(true);
+                setTransitable(false);
            else
                  setTransitable(true);           
             
@@ -230,6 +250,7 @@ public class NodoMapa implements Comparable {
             
         }
         
+        //Nos devuelve la cadena que corresponde a las coordenadas del Nodo
         @Override
         public String toString()
         {
